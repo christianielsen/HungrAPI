@@ -1,3 +1,5 @@
+using HungrAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,14 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (connectionString == null)
+{
+    throw new Exception("Could not get connection string");
+}
+
+builder.Services.AddDbContextPool<HungrDbContext>(options =>
+    options.UseNpgsql(connectionString));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
