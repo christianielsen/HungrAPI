@@ -8,11 +8,9 @@ namespace HungrAPI.Extensions;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services)
+    public static void RegisterServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
-
-        return services;
     }
 
     public static void AddJwtAuthentication(this IServiceCollection services, JwtConfiguration configuration)
