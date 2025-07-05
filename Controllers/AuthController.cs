@@ -1,20 +1,18 @@
-using HungrAPI.Services.AuthService;
-using HungrAPI.Services.AuthService.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HungrAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService = authService;
 
-    [HttpPost("login/google")]
-    public async Task<IActionResult> GoogleLogin(GoogleLoginDto loginDto)
+    [HttpGet("test")]
+    public async Task<IActionResult> GoogleLogin()
     {
-        var result = await _authService.GoogleLogin(loginDto);
-        
-        return result ? Ok() : Unauthorized();
+        Console.WriteLine(HttpContext.Request.Headers.Authorization.ToString());
+        return Ok(new { hello = "hello world" });
     }
 }

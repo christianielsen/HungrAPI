@@ -1,6 +1,7 @@
 using HungrAPI.Configuration;
 using HungrAPI.Data;
 using HungrAPI.Extensions;
+using HungrAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -41,6 +42,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<CreateUserIfNotExists>();
 
 app.MapControllers();
 
