@@ -1,6 +1,7 @@
 using HungrAPI.Configuration;
 using HungrAPI.Data;
 using HungrAPI.Extensions;
+using HungrAPI.Hubs;
 using HungrAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -25,6 +26,8 @@ builder.Services.AddOpenApi();
 builder.Services.RegisterServices();
 builder.Services.AddJwtAuthentication(jwtConfiguration);
 
+builder.Services.AddSignalR();
+
 builder.Services.AddDbContextPool<HungrDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -46,4 +49,5 @@ app.UseMiddleware<CreateUserIfNotExists>();
 
 app.MapControllers();
 
+app.MapHub<ConnectionHub>("/hubs/connection");
 app.Run();

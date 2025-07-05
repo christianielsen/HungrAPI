@@ -1,6 +1,7 @@
 using Google.Apis.Auth;
 using HungrAPI.Data;
 using HungrAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HungrAPI.Services.UserService;
 
@@ -27,5 +28,10 @@ public class UserService(HungrDbContext dbContext) : IUserService
             await transaction.RollbackAsync();
             throw new Exception("Failed to create user");
         }
+    }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 }

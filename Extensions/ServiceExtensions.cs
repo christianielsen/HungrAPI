@@ -1,5 +1,6 @@
 using System.Text;
 using HungrAPI.Configuration;
+using HungrAPI.Services.ConnectionService;
 using HungrAPI.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,7 @@ public static class ServiceExtensions
 {
     public static void RegisterServices(this IServiceCollection services)
     {
+        services.AddScoped<IConnectionService, ConnectionService>();
         services.AddScoped<IUserService, UserService>();
     }
 
@@ -35,6 +37,4 @@ public static class ServiceExtensions
             };
         });
     }
-
-
 }
