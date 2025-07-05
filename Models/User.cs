@@ -20,8 +20,5 @@ public class User
     [MaxLength(255)]
     public string Email { get; set; }
     
-    [Url]
-    public string? AvatarUrl { get; set; }
-    
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 }
