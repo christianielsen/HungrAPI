@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using HungrAPI.Constants;
 using HungrAPI.Enums;
 using HungrAPI.Hubs;
 using HungrAPI.Models;
@@ -22,7 +21,7 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
     [HttpPost("[action]")]
     public async Task<IActionResult> Invite(InviteDto dto, [FromServices] IHubContext<ConnectionHub> hubContext)
     {
-        var inviterEmail = User.FindFirst(JwtClaims.Email)?.Value;
+        var inviterEmail = User.FindFirst(ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(inviterEmail))
         {
             return Unauthorized();
