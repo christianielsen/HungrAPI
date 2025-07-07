@@ -20,7 +20,7 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
     private readonly IUserService _userService = userService;
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Invite(string email, [FromServices] IHubContext<ConnectionHub> hubContext)
+    public async Task<IActionResult> Invite(InviteDto dto, [FromServices] IHubContext<ConnectionHub> hubContext)
     {
         var inviterEmail = User.FindFirst(JwtClaims.Email)?.Value;
         if (string.IsNullOrEmpty(inviterEmail))
@@ -34,7 +34,7 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
             return NotFound("Inviter not found");
         }
 
-        var invitee = await _userService.GetUserByEmailAsync(email);
+        var invitee = await _userService.GetUserByEmailAsync(dto.Email);
         if (invitee == null)
         {
             return NotFound("Invitee not found");
@@ -49,7 +49,7 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
         };
         await _connectionService.AddConnectionAsync(connection);
 
-        await hubContext.Clients.Groups(email).SendAsync("ReceiveInvite", new
+        await hubContext.Clients.Groups(dto.Email).SendAsync("ReceiveInvite", new
         {
             ConnectionId = connection.Id,
             From = inviterEmail
