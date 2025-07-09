@@ -13,4 +13,8 @@ public class Connection
     public ConnectionStatus Status { get; set; }
     
     public DateTimeOffset CreatedAt { get; set; }
+    
+    public User User1 { get; set; }
+    
+    public User User2 { get; set; }
 }
