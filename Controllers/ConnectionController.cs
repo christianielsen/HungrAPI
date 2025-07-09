@@ -56,4 +56,39 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
 
         return Ok(new { connection.Id });
     }
+
+    [HttpPost("{connectionId:guid}/accept")]
+    public async Task<IActionResult> Accept(Guid connectionId, [FromServices] IHubContext<ConnectionHub> hubContext)
+    {
+        var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(currentUserEmail))
+            return Unauthorized();
+
+        var currentUser = await _userService.GetUserByEmailAsync(currentUserEmail);
+        if (currentUser == null)
+        {
+            return NotFound("Current user not found");
+        }
+
+        var connection = await _connectionService.GetConnectionAsync(connectionId);
+        if (connection == null)
+        {
+            return NotFound("Connection not found");
+        }
+
+        if (connection.Status != ConnectionStatus.Pending)
+        {
+            return BadRequest("Connection status not pending");
+        }
+
+        await _connectionService.UpdateConnectionStatusAsync(connection, ConnectionStatus.Active);
+
+        await hubContext.Clients.Group(connection.User1.Email).SendAsync("ConnectionAccepted", new
+        {
+            ConnectionId = connection.Id,
+            acceptedBy = currentUser.Email
+        });
+
+        return NoContent();
+    }
 }
