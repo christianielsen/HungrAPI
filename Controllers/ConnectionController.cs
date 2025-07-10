@@ -83,11 +83,14 @@ public class ConnectionController(IConnectionService connectionService, IUserSer
 
         await _connectionService.UpdateConnectionStatusAsync(connection, ConnectionStatus.Active);
 
-        await hubContext.Clients.Group(connection.User1.Email).SendAsync("ConnectionAccepted", new
+        var payload = new
         {
             ConnectionId = connection.Id,
             acceptedBy = currentUser.Email
-        });
+        };
+
+        await hubContext.Clients.Group(connection.User1.Email).SendAsync("ConnectionAccepted", payload);
+        await hubContext.Clients.Group(connection.User2.Email).SendAsync("ConnectionAccepted", payload);
 
         return NoContent();
     }
