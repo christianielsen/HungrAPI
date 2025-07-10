@@ -37,4 +37,13 @@ public static class ServiceExtensions
             };
         });
     }
+
+    public static void AddGoogleHttpClient(this IServiceCollection services, GoogleConfiguration configuration)
+    {
+        services.AddHttpClient(Constants.HttpClient.AuthenticatedGoogleApiClient, client =>
+        {
+            client.BaseAddress = new Uri(configuration.Url);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
+    }
 }
