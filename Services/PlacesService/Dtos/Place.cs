@@ -7,4 +7,5 @@ public class Place
     public Geometry Geometry { get; set; }
     public double? Rating { get; set; }
     public int? UserRatingsTotal { get; set; }
+    public PhotoDetails[] Photos { get; set; }
 }

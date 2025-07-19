@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HungrAPI.Controllers;
 
-[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class PlacesController(IPlacesService placesService) : ControllerBase
@@ -18,5 +18,13 @@ public class PlacesController(IPlacesService placesService) : ControllerBase
         var places = await _placesService.GetRestaurantsAsync(location);
 
         return Ok(places);
+    }
+
+    [HttpGet("photo/{photoReference}")]
+    public async Task<IActionResult> GetPlacePhoto(string photoReference)
+    {
+        var photo = await _placesService.GetPlacePhotoAsync(photoReference);
+
+        return File(photo.Stream, photo.ContentType);
     }
 }
